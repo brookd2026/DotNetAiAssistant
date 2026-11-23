@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="AiAssistant.Api/AiAssistant.Api.csproj" />
+  <Project Path="AiAssistant.Core/AiAssistant.Core.csproj" />
+  <Project Path="AiAssistant.Tests/AiAssistant.Tests.csproj" />
+</Solution>
