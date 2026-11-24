@@ -26,11 +26,14 @@ jobs:
       - name: dotnet publish
         run: dotnet publish AiAssistant.Api/AiAssistant.Api.csproj -c Release -o ./output --no-build
 
+      - name: Zip published files
+        run: cd output && zip -r ../app.zip .
+
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ./output
+          path: app.zip
 
   deploy:
     runs-on: ubuntu-latest
@@ -47,4 +50,4 @@ jobs:
           app-name: 'dotnetaiassistant'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: .
+          package: app.zip
