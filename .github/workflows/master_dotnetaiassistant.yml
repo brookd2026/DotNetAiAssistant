@@ -24,7 +24,7 @@ jobs:
         run: dotnet test --no-build --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish AiAssistant.Api/AiAssistant.Api.csproj -c Release -o ./output --no-build
+        run: dotnet publish AiAssistant.Api/AiAssistant.Api.csproj -c Release -o ./output
 
       - name: Zip published files
         run: cd output && zip -r ../app.zip .
