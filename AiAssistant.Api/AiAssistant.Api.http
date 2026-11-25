@@ -11,6 +11,15 @@ Content-Type: application/json
   "question": "Explain dependency injection in C# in two sentences."
 }
 
+### Live Azure Test
+POST https://dotnetaiassistant.azurewebsites.net
+Content-Type: application/json
+
+{
+  "question": "Explain Clean Architecture in two sentences."
+}
+###
+
 
 
 

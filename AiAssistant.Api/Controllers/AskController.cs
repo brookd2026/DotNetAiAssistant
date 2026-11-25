@@ -18,7 +18,18 @@ public class AskController(IAssistantService assistantService) : ControllerBase
             return BadRequest("Question is required.");
         }
 
-        var answer = await assistantService.AskAsync(request.Question, cancellationToken);
-        return Ok(new AskResponse(answer));
+        try
+        {
+            var answer = await assistantService.AskAsync(request.Question, cancellationToken);
+            return Ok(new AskResponse(answer));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status502BadGateway, new
+            {
+                error = ex.Message,
+                innerError = ex.InnerException?.Message
+            });
+        }
     }
 }
