@@ -10,7 +10,9 @@
 
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.4" />
+    <PackageReference Include="Microsoft.Extensions.AI" Version="11.0.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.0" />
+    <PackageReference Include="Moq" Version="4.21.0" />
     <PackageReference Include="NUnit" Version="4.3.2" />
     <PackageReference Include="NUnit.Analyzers" Version="4.7.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="5.0.0" />
@@ -21,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AiAssistant.Api\AiAssistant.Api.csproj" />
     <ProjectReference Include="..\AiAssistant.Core\AiAssistant.Core.csproj" />
   </ItemGroup>
 

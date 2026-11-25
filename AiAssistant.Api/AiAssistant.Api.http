@@ -1,6 +1,16 @@
-@AiAssistant.Api_HostAddress = http://localhost:5158
+@AiAssistant.Api_HostAddress = https://localhost:7227
 
 GET {{AiAssistant.Api_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+POST {{AiAssistant.Api_HostAddress}}/ask
+Content-Type: application/json
+
+{
+  "question": "Explain dependency injection in C# in two sentences."
+}
+
+
+
+
