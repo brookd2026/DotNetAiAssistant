@@ -19,7 +19,7 @@ else
 {
     var apiKey = builder.Configuration["AI:GeminiApiKey"]
         ?? throw new InvalidOperationException("AI:GeminiApiKey is not configured.");
-    var model = builder.Configuration["AI:GeminiModel"] ?? "gemini-2.5-flash";
+    var model = builder.Configuration["AI:GeminiModel"] ?? "gemini-3.8-flash";
 
     var openAiOptions = new OpenAIClientOptions
     {
