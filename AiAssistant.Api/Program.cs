@@ -24,7 +24,8 @@ else
 
     var openAiOptions = new OpenAIClientOptions
     {
-        Endpoint = new Uri("https://generativelanguage.googleapis.com/v1beta/openai/")
+        Endpoint = new Uri("https://generativelanguage.googleapis.com/v1beta/openai/"),
+        NetworkTimeout = TimeSpan.FromMinutes(2)
     };
 
     IChatClient geminiClient = new OpenAIClient(new ApiKeyCredential(apiKey), openAiOptions)
