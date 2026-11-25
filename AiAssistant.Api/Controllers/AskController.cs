@@ -23,12 +23,21 @@ public class AskController(IAssistantService assistantService) : ControllerBase
             var answer = await assistantService.AskAsync(request.Question, cancellationToken);
             return Ok(new AskResponse(answer));
         }
+        catch (System.ClientModel.ClientResultException clientEx)
+        {
+            var rawBody = clientEx.GetRawResponse()?.Content?.ToString();
+            return StatusCode(StatusCodes.Status502BadGateway, new
+            {
+                status = clientEx.Status,
+                error = clientEx.Message,
+                googleResponse = rawBody
+            });
+        }
         catch (Exception ex)
         {
             return StatusCode(StatusCodes.Status502BadGateway, new
             {
-                error = ex.Message,
-                innerError = ex.InnerException?.Message
+                error = ex.ToString(),
             });
         }
     }

@@ -12,7 +12,7 @@ Content-Type: application/json
 }
 
 ### Live Azure Test
-POST https://dotnetaiassistant.azurewebsites.net
+POST https://dotnetaiassistant.azurewebsites.net/ask
 Content-Type: application/json
 
 {
