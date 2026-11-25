@@ -32,4 +32,11 @@ public class AskController(IAssistantService assistantService) : ControllerBase
             });
         }
     }
+
+    [HttpGet("ping")]
+    public IActionResult Ping([FromServices] IConfiguration config)
+    {
+        var hasKey = !string.IsNullOrWhiteSpace(config["AI:GeminiApiKey"]);
+        return Ok(new { status = "AskController is live", geminiKeyConfigured = hasKey });
+    }
 }
