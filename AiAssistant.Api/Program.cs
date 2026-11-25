@@ -1,8 +1,9 @@
-using System.ClientModel;
+using AiAssistant.Api.Controllers;
 using AiAssistant.Core;
 using Microsoft.Extensions.AI;
 using OllamaSharp;
 using OpenAI;
+using System.ClientModel;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,6 +40,16 @@ var app = builder.Build();
 
 app.MapOpenApi();
 app.UseAuthorization();
+
+app.MapPost("/chat", async (AskController.AskRequest request, IAssistantService assistantService, CancellationToken ct) =>
+{
+    if (string.IsNullOrWhiteSpace(request.Question))
+        return Results.BadRequest("Question is required.");
+
+    var answer = await assistantService.AskAsync(request.Question, ct);
+    return Results.Ok(new AskController.AskResponse(answer));
+});
+
 app.MapControllers();
 
 app.Run();
