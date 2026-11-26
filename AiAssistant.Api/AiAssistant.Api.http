@@ -1,4 +1,5 @@
 @AiAssistant.Api_HostAddress = https://localhost:7227
+@AzureHost = https://dotnetaiassistant.azurewebsites.net
 
 GET {{AiAssistant.Api_HostAddress}}/weatherforecast/
 Accept: application/json
@@ -12,12 +13,22 @@ Content-Type: application/json
 }
 
 ### Live Azure Test
-POST https://dotnetaiassistant.azurewebsites.net/ask
+POST https://dotnetaiassistant.azurewebsites.net/Ask
 Content-Type: application/json
 
 {
   "question": "Explain Clean Architecture in two sentences."
 }
+###
+
+### 2. Live Azure Gemini Test
+POST {{AzureHost}}/Ask
+Content-Type: application/json
+
+{
+  "question": "Explain Clean Architecture in two sentences."
+}
+
 ###
 
 

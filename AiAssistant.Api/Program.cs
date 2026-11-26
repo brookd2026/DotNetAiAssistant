@@ -1,5 +1,6 @@
 using AiAssistant.Api.Controllers;
 using AiAssistant.Core;
+using Google.GenAI;
 using Microsoft.Extensions.AI;
 using OllamaSharp;
 using OpenAI;
@@ -22,16 +23,7 @@ else
         ?? throw new InvalidOperationException("AI:GeminiApiKey is not configured.");
     var model = builder.Configuration["AI:GeminiModel"] ?? "gemini-3.8-flash";
 
-    var openAiOptions = new OpenAIClientOptions
-    {
-        Endpoint = new Uri("https://generativelanguage.googleapis.com/v1beta/openai/"),
-        NetworkTimeout = TimeSpan.FromMinutes(2)
-    };
-
-    IChatClient geminiClient = new OpenAIClient(new ApiKeyCredential(apiKey), openAiOptions)
-        .GetChatClient(model)
-        .AsIChatClient();
-
+    IChatClient geminiClient = new Client(apiKey: apiKey).AsIChatClient(model);
     builder.Services.AddChatClient(geminiClient);
 }
 
