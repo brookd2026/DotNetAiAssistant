@@ -24,6 +24,7 @@ Content-Type: application/json
 ### 2. Live Azure Gemini Test
 POST {{AzureHost}}/Ask
 Content-Type: application/json
+X-Api-Key: my-dotnet-ai-secret-2026
 
 {
   "question": "Explain Clean Architecture in two sentences."

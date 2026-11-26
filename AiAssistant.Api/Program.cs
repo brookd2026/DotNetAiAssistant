@@ -9,6 +9,16 @@ using System.ClientModel;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AngularClient", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
@@ -33,6 +43,7 @@ builder.Services.AddScoped<IAssistantService, AssistantService>();
 var app = builder.Build();
 
 app.MapOpenApi();
+app.UseCors("AngularClient"); // <-- Must come BEFORE ApiKeyMiddleware!
 app.UseMiddleware<ApiKeyMiddleware>();
 app.UseAuthorization();
 
