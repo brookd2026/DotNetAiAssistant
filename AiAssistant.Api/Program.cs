@@ -1,4 +1,5 @@
 using AiAssistant.Api.Controllers;
+using AiAssistant.Api.Middleware;
 using AiAssistant.Core;
 using Google.GenAI;
 using Microsoft.Extensions.AI;
@@ -21,7 +22,7 @@ else
 {
     var apiKey = builder.Configuration["AI:GeminiApiKey"]
         ?? throw new InvalidOperationException("AI:GeminiApiKey is not configured.");
-    var model = builder.Configuration["AI:GeminiModel"] ?? "gemini-3.8-flash";
+    var model = builder.Configuration["AI:GeminiModel"] ?? "gemini-3.1-flash-lite";
 
     IChatClient geminiClient = new Client(apiKey: apiKey).AsIChatClient(model);
     builder.Services.AddChatClient(geminiClient);
@@ -32,6 +33,7 @@ builder.Services.AddScoped<IAssistantService, AssistantService>();
 var app = builder.Build();
 
 app.MapOpenApi();
+app.UseMiddleware<ApiKeyMiddleware>();
 app.UseAuthorization();
 
 app.MapPost("/chat", async (AskController.AskRequest request, IAssistantService assistantService, CancellationToken ct) =>
