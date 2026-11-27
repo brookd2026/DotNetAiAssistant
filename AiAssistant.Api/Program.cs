@@ -47,14 +47,14 @@ app.UseCors("AngularClient"); // <-- Must come BEFORE ApiKeyMiddleware!
 app.UseMiddleware<ApiKeyMiddleware>();
 app.UseAuthorization();
 
-app.MapPost("/chat", async (AskController.AskRequest request, IAssistantService assistantService, CancellationToken ct) =>
-{
-    if (string.IsNullOrWhiteSpace(request.Question))
-        return Results.BadRequest("Question is required.");
+//app.MapPost("/chat", async (AskController.AskRequest request, IAssistantService assistantService, CancellationToken ct) =>
+//{
+//    if (string.IsNullOrWhiteSpace(request.Question))
+//        return Results.BadRequest("Question is required.");
 
-    var answer = await assistantService.AskAsync(request.Question, ct);
-    return Results.Ok(new AskController.AskResponse(answer));
-});
+//    var answer = await assistantService.AskAsync(request.Question, ct);
+//    return Results.Ok(new AskController.AskResponse(answer));
+//});
 
 app.MapControllers();
 

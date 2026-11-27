@@ -19,24 +19,33 @@ public class AssistantServiceTests
     }
 
     [Test]
-    public async Task AskAsync_ValidQuestion_ReturnsModelText()
+    public async Task AskAsync_MultiTurnHistory_SendsSystemAndAllTurns()
     {
-        var expectedResponse = new ChatResponse(new ChatMessage(ChatRole.Assistant, "Dependency injection decouples components."));
+        IEnumerable<ChatMessage>? sentMessages = null;
         _mockChatClient
             .Setup(c => c.GetResponseAsync(
                 It.IsAny<IEnumerable<ChatMessage>>(),
                 It.IsAny<ChatOptions?>(),
                 It.IsAny<CancellationToken>()))
-            .ReturnsAsync(expectedResponse);
+            .Callback<IEnumerable<ChatMessage>, ChatOptions?, CancellationToken>((msgs, _, _) => sentMessages = msgs.ToList())
+            .ReturnsAsync(new ChatResponse(new ChatMessage(ChatRole.Assistant, "It stands for Single Responsibility.")));
 
-        var result = await _sut.AskAsync("What is dependency injection?");
+        var history = new List<ConversationTurn>
+        {
+            new("user", "What is SOLID in C#?"),
+            new("assistant", "SOLID is five object-oriented design principles."),
+            new("user", "What does the S stand for?")
+        };
 
-        Assert.That(result, Is.EqualTo("Dependency injection decouples components."));
+        var result = await _sut.AskAsync(history);
+
+        Assert.That(result, Is.EqualTo("It stands for Single Responsibility."));
+        Assert.That(sentMessages!.Count(), Is.EqualTo(4)); // 1 System + 3 conversation turns
     }
 
     [Test]
-    public void AskAsync_EmptyQuestion_ThrowsArgumentException()
+    public void AskAsync_EmptyHistory_ThrowsArgumentException()
     {
-        Assert.ThrowsAsync<ArgumentException>(() => _sut.AskAsync("   "));
+        Assert.ThrowsAsync<ArgumentException>(() => _sut.AskAsync([]));
     }
 }

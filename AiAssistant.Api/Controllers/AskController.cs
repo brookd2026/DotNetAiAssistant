@@ -7,45 +7,31 @@ namespace AiAssistant.Api.Controllers;
 [Route("[controller]")]
 public class AskController(IAssistantService assistantService) : ControllerBase
 {
-    public record AskRequest(string Question);
+    public record AskRequest(List<ConversationTurn>? Messages, string? Question = null);
     public record AskResponse(string Answer);
 
     [HttpPost]
     public async Task<ActionResult<AskResponse>> Post([FromBody] AskRequest request, CancellationToken cancellationToken)
     {
-        if (string.IsNullOrWhiteSpace(request.Question))
+        var turns = request.Messages is { Count: > 0 }
+            ? request.Messages
+            : !string.IsNullOrWhiteSpace(request.Question)
+                ? [new ConversationTurn("user", request.Question)]
+                : [];
+
+        if (turns.Count == 0)
         {
-            return BadRequest("Question is required.");
+            return BadRequest("Messages or Question is required.");
         }
 
         try
         {
-            var answer = await assistantService.AskAsync(request.Question, cancellationToken);
+            var answer = await assistantService.AskAsync(turns, cancellationToken);
             return Ok(new AskResponse(answer));
-        }
-        catch (System.ClientModel.ClientResultException clientEx)
-        {
-            var rawBody = clientEx.GetRawResponse()?.Content?.ToString();
-            return StatusCode(StatusCodes.Status502BadGateway, new
-            {
-                status = clientEx.Status,
-                error = clientEx.Message,
-                googleResponse = rawBody
-            });
         }
         catch (Exception ex)
         {
-            return StatusCode(StatusCodes.Status502BadGateway, new
-            {
-                error = ex.ToString(),
-            });
+            return StatusCode(StatusCodes.Status502BadGateway, new { error = ex.Message });
         }
-    }
-
-    [HttpGet("ping")]
-    public IActionResult Ping([FromServices] IConfiguration config)
-    {
-        var hasKey = !string.IsNullOrWhiteSpace(config["AI:GeminiApiKey"]);
-        return Ok(new { status = "AskController is live", geminiKeyConfigured = hasKey });
     }
 }
